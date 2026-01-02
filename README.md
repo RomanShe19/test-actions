@@ -25,13 +25,19 @@
 
 ## Endpoints
 
-- `GET /` - приветственное сообщение
+- `GET /` - приветственное сообщение со списком доступных эндпоинтов
 - `GET /time` - возвращает текущее время в различных форматах
+- `GET /date` - возвращает текущую дату с подробной информацией
+- `GET /date/year` - возвращает текущий год
+- `GET /date/month` - возвращает текущий месяц
+- `GET /date/day` - возвращает текущий день
 - `GET /health` - проверка состояния сервера
 - `GET /docs` - автоматическая документация (Swagger UI)
 - `GET /redoc` - альтернативная документация (ReDoc)
 
-## Пример ответа от /time
+## Примеры ответов
+
+### GET /time
 
 ```json
 {
@@ -39,6 +45,47 @@
   "timestamp": 1735826445.123456,
   "formatted_time": "2026-01-02 15:30:45",
   "timezone": "UTC+03:00"
+}
+```
+
+### GET /date
+
+```json
+{
+  "date": "2026-01-02",
+  "year": 2026,
+  "month": 1,
+  "day": 2,
+  "weekday": "Friday",
+  "formatted_date": "02.01.2026"
+}
+```
+
+### GET /date/year
+
+```json
+{
+  "year": 2026
+}
+```
+
+### GET /date/month
+
+```json
+{
+  "month": 1,
+  "month_name": "January",
+  "month_name_ru": "January"
+}
+```
+
+### GET /date/day
+
+```json
+{
+  "day": 2,
+  "weekday": "Friday",
+  "day_of_year": 2
 }
 ```
 
@@ -68,4 +115,42 @@ docker stop time-server
 ```bash
 docker rm time-server
 ```
+
+## CI/CD с GitHub Actions
+
+Проект настроен для автоматической сборки и деплоя через GitHub Actions.
+
+### Workflow файлы:
+
+- **`.github/workflows/deploy.yml`** - базовый workflow для сборки и деплоя
+- **`.github/workflows/deploy-advanced.yml`** - расширенный workflow с дополнительными проверками
+
+### Что происходит при пуше в main/master:
+
+1. **Job 1: Build and Push**
+   - Собирается Docker образ
+   - Образ публикуется в GitHub Container Registry (ghcr.io)
+   - Образ тегируется как `latest` и с хешем коммита
+
+2. **Job 2: Deploy**
+   - Подключение к удаленному серверу через SSH
+   - Остановка и удаление старого контейнера
+   - Загрузка нового образа из реестра
+   - Запуск нового контейнера
+   - Очистка неиспользуемых образов
+
+### Настройка секретов:
+
+Для работы CI/CD необходимо добавить следующие секреты в GitHub (Settings → Secrets and variables → Actions):
+
+- `SSH_HOST` - IP-адрес или домен вашего сервера
+- `SSH_USERNAME` - имя пользователя для SSH
+- `SSH_PRIVATE_KEY` - приватный SSH ключ
+- `SSH_PORT` - порт SSH (обычно 22)
+
+Подробная инструкция по настройке: `.github/SECRETS.md`
+
+### Ручной запуск деплоя:
+
+Workflow можно запустить вручную через вкладку Actions → выбрать workflow → Run workflow
 
