@@ -116,3 +116,41 @@ docker stop time-server
 docker rm time-server
 ```
 
+## CI/CD с GitHub Actions
+
+Проект настроен для автоматической сборки и деплоя через GitHub Actions.
+
+### Workflow файлы:
+
+- **`.github/workflows/deploy.yml`** - базовый workflow для сборки и деплоя
+- **`.github/workflows/deploy-advanced.yml`** - расширенный workflow с дополнительными проверками
+
+### Что происходит при пуше в main/master:
+
+1. **Job 1: Build and Push**
+   - Собирается Docker образ
+   - Образ публикуется в GitHub Container Registry (ghcr.io)
+   - Образ тегируется как `latest` и с хешем коммита
+
+2. **Job 2: Deploy**
+   - Подключение к удаленному серверу через SSH
+   - Остановка и удаление старого контейнера
+   - Загрузка нового образа из реестра
+   - Запуск нового контейнера
+   - Очистка неиспользуемых образов
+
+### Настройка секретов:
+
+Для работы CI/CD необходимо добавить следующие секреты в GitHub (Settings → Secrets and variables → Actions):
+
+- `SSH_HOST` - IP-адрес или домен вашего сервера
+- `SSH_USERNAME` - имя пользователя для SSH
+- `SSH_PRIVATE_KEY` - приватный SSH ключ
+- `SSH_PORT` - порт SSH (обычно 22)
+
+Подробная инструкция по настройке: `.github/SECRETS.md`
+
+### Ручной запуск деплоя:
+
+Workflow можно запустить вручную через вкладку Actions → выбрать workflow → Run workflow
+
