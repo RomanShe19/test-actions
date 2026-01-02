@@ -45,3 +45,30 @@ Start Indexing - Docs
 }
 ```
 
+## Docker
+
+### Сборка образа:
+```bash
+docker build -t time-server-api .
+```
+
+### Запуск контейнера:
+```bash
+docker run -d -p 8000:8000 --name time-server time-server-api
+```
+
+### Запуск с переменными окружения:
+```bash
+docker run -d -p 8000:8000 -e DEBUG=True --name time-server time-server-api
+```
+
+### Остановка контейнера:
+```bash
+docker stop time-server
+```
+
+### Удаление контейнера:
+```bash
+docker rm time-server
+```
+
