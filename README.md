@@ -31,6 +31,8 @@
 - `GET /date/year` - возвращает текущий год
 - `GET /date/month` - возвращает текущий месяц
 - `GET /date/day` - возвращает текущий день
+- `GET /convert-timezone` - конвертирует время между часовыми поясами
+- `GET /timezones` - список доступных часовых поясов
 - `GET /health` - проверка состояния сервера
 - `GET /docs` - автоматическая документация (Swagger UI)
 - `GET /redoc` - альтернативная документация (ReDoc)
@@ -86,6 +88,49 @@
   "day": 2,
   "weekday": "Friday",
   "day_of_year": 2
+}
+```
+
+### GET /convert-timezone?time=15:00&timezone=Екатеринбург
+
+```json
+{
+  "input": {
+    "time": "15:00",
+    "timezone": "UTC",
+    "full_datetime": "2026-01-02T15:00:00+00:00"
+  },
+  "output": {
+    "time": "20:00:00",
+    "timezone": "Екатеринбург",
+    "timezone_name": "Asia/Yekaterinburg",
+    "full_datetime": "2026-01-02T20:00:00+05:00",
+    "utc_offset": "+0500"
+  },
+  "time_difference": {
+    "hours": 5,
+    "description": "Разница: +5 часов"
+  }
+}
+```
+
+### GET /timezones
+
+```json
+{
+  "message": "Список доступных часовых поясов",
+  "usage": "Используйте любое из этих названий в параметре 'timezone'",
+  "timezones": {
+    "moscow": "Europe/Moscow",
+    "ekaterinburg": "Asia/Yekaterinburg",
+    "tokyo": "Asia/Tokyo",
+    "...": "..."
+  },
+  "examples": [
+    "/convert-timezone?time=15:00&timezone=Екатеринбург",
+    "/convert-timezone?time=15:00&timezone=Moscow",
+    "/convert-timezone?time=20:00&timezone=UTC&from_timezone=Ekaterinburg"
+  ]
 }
 ```
 
