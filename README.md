@@ -1,10 +1,7 @@
 # Time Server API
 
-Создай приложение на FastAPI, простой тестовый бэкэнд, возвращающий текущее время сервера.
+Приложение на FastAPI, простой тестовый бэкэнд, возвращающий текущее время сервера.
 
-## Кодовая нот indexed
-Results will get much better when Cursor understands your codebase
-Start Indexing - Docs
 
 ## Особенности приложения:
 
